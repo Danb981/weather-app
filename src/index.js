@@ -1,3 +1,5 @@
 import './style.css';
+import { APIController } from './apicontroller';
 
-console.log('test');
+// APIController.getCityWeather('Brampton');
+APIController.getCityWeather('Cidaris'); // 404

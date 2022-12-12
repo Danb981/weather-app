@@ -1,5 +1,58 @@
 html, body{
     margin: 0;
     padding: 0;
-    min-height: 100%;
+    min-height: 100vh;
+}
+
+body{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 6fr 0.25fr;
+}
+
+button{
+    box-sizing: content-box;
+}
+
+button:hover{
+    cursor: pointer;
+}
+
+header{
+    background-color: rgb(63, 63, 199);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer{
+    background-color: rgb(63, 63, 199);
+}
+
+.weatherInfo{
+    background-color: rgb(131, 131, 241);
+}
+
+header .search{
+    height: 35%;
+    width: 50%;
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+}
+
+header .search > *{
+    font-size: 2.5rem;
+    height: 100%;
+    border-radius: 16px;
+}
+
+header .search > input{
+    text-align: center;
+    flex: 1;
+}
+
+header .search > button{
+    flex: 0.25;
 }
