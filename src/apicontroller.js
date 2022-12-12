@@ -20,6 +20,7 @@ class APIController {
       if (this.tries < this.maxTries) {
         this.getCityWeather('Toronto'); // perform some default fetch
       } else {
+        this.tries = 0;
         console.log(`Failed ${this.maxTries} times, try again later`);
       }
     }
