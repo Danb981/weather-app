@@ -55,6 +55,13 @@ class DOMController {
     sunset.innerHTML = `Sunset<br />${sunsetTime}`;
   }
 
+  static populateForecast(forecastJson) {
+    forecastJson.list.forEach((li) => {
+      li.dt = new Date(li.dt * 1000);
+    });
+    console.log(forecastJson);
+  }
+
   static searchBtnClicked() {
     const searchTerm = document.querySelector('.searchTerm').value;
     APIController.getCityWeather(searchTerm);

@@ -92,7 +92,7 @@ input[type="radio"]{
 
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 100px;
+    grid-template-rows: 100px fit-content(330px);
     grid-auto-rows: auto;
     justify-items: center;
     align-items: center;
@@ -137,4 +137,10 @@ input[type="radio"]{
     justify-content: center;
     align-content: center;
     text-align: center;
+}
+
+.card .forecast{
+    height: 100%;
+    width: 75%;
+    background-color: white;
 }
