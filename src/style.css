@@ -23,6 +23,10 @@ button:hover{
     cursor: pointer;
 }
 
+input[type="radio"]:hover, label:hover{
+    cursor: pointer;
+}
+
 header{
     background-color: #33587A;
 
@@ -36,17 +40,18 @@ footer{
 }
 
 header .search{
-    height: 35%;
-    width: 50%;
+    height: 55%;
+    width: 60%;
     display: flex;
     gap: 25px;
     justify-content: center;
+    align-items: center;
 }
 
 header .search > *{
     font-size: 2.5rem;
     height: 100%;
-    border-radius: 16px;
+    border-radius: 16px; 
 }
 
 header .search > input{
@@ -58,11 +63,25 @@ header .search > button{
     flex: 0.25;
 }
 
+header fieldset{
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-left: 0;
+    border: none;
+}
+
+input[type="radio"]{
+    width: 25px;
+    height: 25px;
+}
+
 .weatherInfo{
     background-color: #1965B1;
 
     display: grid;
-    grid-template-columns: 50%;
+    grid-template-columns: minmax(820px, 50%);
     justify-content: center;
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import { DOMController } from './domcontroller';
 
 /* eslint-disable no-console */
@@ -26,6 +27,7 @@ class APIController {
     } catch (e) {
       this.tries += 1;
       if (this.tries < this.maxTries) {
+        console.log('Failed to fetch, trying again with user\'s default city');
         this.getCityWeather(this.user.defaultCity); // perform some default fetch
       } else {
         this.tries = 0;

@@ -16,7 +16,7 @@
   \*********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"User\": () => (/* binding */ User)\n/* harmony export */ });\nclass User {\n  constructor(defaultCity, preferredUnit) {\n    this.defaultCity = defaultCity;\n    this.preferredUnit = preferredUnit;\n  }\n\n  changePreferredUnit(newUnit) {\n    this.preferredUnit = newUnit;\n  }\n}\n\n// eslint-disable-next-line import/prefer-default-export\n\n\n\n//# sourceURL=webpack://weather-app/./src/user.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"User\": () => (/* binding */ User)\n/* harmony export */ });\nclass User {\n  constructor(defaultCity, preferredUnit) {\n    this.defaultCity = defaultCity;\n    this.preferredUnit = preferredUnit;\n    if (this.preferredUnit === 'metric') {\n      this.preferredUnitAbbreviation = 'C';\n    } else if (this.preferredUnit === 'imperial') {\n      this.preferredUnitAbbreviation = 'F';\n    }\n  }\n\n  changePreferredUnit(newUnit) {\n    this.preferredUnit = newUnit;\n    if (this.preferredUnit === 'metric') {\n      this.preferredUnitAbbreviation = 'C';\n    } else if (this.preferredUnit === 'imperial') {\n      this.preferredUnitAbbreviation = 'F';\n    }\n  }\n}\n\n// eslint-disable-next-line import/prefer-default-export\n\n\n\n//# sourceURL=webpack://weather-app/./src/user.js?");
 
 /***/ })
 

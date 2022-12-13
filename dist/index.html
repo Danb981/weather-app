@@ -9,30 +9,36 @@
 <body>
     <header>
         <div class="search">
-            <input type="text" placeholder="Your City...">
-            <button type="button">Search</button>
+            <input type="text" class="searchTerm" placeholder="Your City...">
+            <button type="button" class="searchBtn">Search</button>
+            <fieldset>
+                <input type="radio" name="unit" id="metric" value="metric" checked>
+                <label for="metric">C</label>
+                <input type="radio" name="unit" id="imperial" value="imperial">
+                <label for="imperial">F</label>
+            </fieldset>
         </div>
     </header>
     <div class="weatherInfo">
         <div class="card">
-            <h1 class="cityName">Toronto, ON</h1>
+            <h1 class="cityName"></h1>
             <div class="currentWeather">
                 <span class="temperature">
-                    <h2 class="currentTemperature">0C</h2>
-                    <h6 class="feelsLikeTemperature">Feels Like -1C</h6>
+                    <h2 class="currentTemperature"></h2>
+                    <h6 class="feelsLikeTemperature"></h6>
                 </span>
                 <span class="conditions">
-                    <h4 class="currentCondition">Partly Cloudy</h4>
-                    <img class="currentConditionIcon" src="http://openweathermap.org/img/wn/10d@2x.png">
+                    <h4 class="currentCondition"></h4>
+                    <img class="currentConditionIcon">
                 </span>
                 <span class="advancedInfo">
-                    <h4 class="lowTemperature">Low<br/>-5C</h4>
-                    <h4 class="windSpeed">Wind Speed<br/>5km/h</h4>
-                    <h4 class="humidity">Humidity<br/>70%</h4>
+                    <h4 class="lowTemperature"></h4>
+                    <h4 class="windSpeed"></h4>
+                    <h4 class="humidity"></h4>
                     <h4 class="sunrise">Sunrise<br/>7:44a.m</h4>
-                    <h4 class="highTemperature">High<br/>3C</h4>
-                    <h4 class="windDirection">Wind Direction<br/>9NW</h4>
-                    <h4 class="pressure">Pressure<br/>104.1kPa</h4>
+                    <h4 class="highTemperature"></h4>
+                    <h4 class="windDirection"><br/>9NW</h4>
+                    <h4 class="pressure"></h4>
                     <h4 class="sunset">Sunset<br/>4:45p.m</h4>
                 </span>
             </div>
