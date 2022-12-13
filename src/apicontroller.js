@@ -1,3 +1,6 @@
+import { DOMController } from './domcontroller';
+
+/* eslint-disable no-console */
 class APIController {
   static tries = 0;
 
@@ -5,8 +8,13 @@ class APIController {
 
   static apiKey = '00e8daf01cd1ddaced71911e08b02338';
 
+  static init(user) {
+    this.user = user;
+    this.getCityWeather(user.defaultCity); // get the default city weather on page load
+  }
+
   static getCityWeather = async (cityName) => {
-    const apiQuery = `https://api.openweathermap.org/data/2.5/weather?units=metric&q=${cityName}&appid=${this.apiKey}`;
+    const apiQuery = `https://api.openweathermap.org/data/2.5/weather?units=${this.user.preferredUnit}&q=${cityName}&appid=${this.apiKey}`;
 
     try {
       const result = await fetch(apiQuery);
@@ -14,11 +22,11 @@ class APIController {
         throw new Error('Issue getting info from API');
       }
       const json = await result.json();
-      console.log(json);
+      DOMController.populateCurrentWeather(json);
     } catch (e) {
       this.tries += 1;
       if (this.tries < this.maxTries) {
-        this.getCityWeather('Toronto'); // perform some default fetch
+        this.getCityWeather(this.user.defaultCity); // perform some default fetch
       } else {
         this.tries = 0;
         console.log(`Failed ${this.maxTries} times, try again later`);
@@ -42,4 +50,5 @@ class APIController {
   };
 }
 
+// eslint-disable-next-line import/prefer-default-export
 export { APIController };

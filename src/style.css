@@ -10,6 +10,11 @@ body{
     grid-template-rows: 1fr 6fr 0.25fr;
 }
 
+h2, h3, h4, h5, h6{
+    padding: 0;
+    margin: 0;
+}
+
 button{
     box-sizing: content-box;
 }
@@ -19,7 +24,7 @@ button:hover{
 }
 
 header{
-    background-color: rgb(63, 63, 199);
+    background-color: #33587A;
 
     display: flex;
     justify-content: center;
@@ -27,11 +32,7 @@ header{
 }
 
 footer{
-    background-color: rgb(63, 63, 199);
-}
-
-.weatherInfo{
-    background-color: rgb(131, 131, 241);
+    background-color: #33587A;
 }
 
 header .search{
@@ -55,4 +56,66 @@ header .search > input{
 
 header .search > button{
     flex: 0.25;
+}
+
+.weatherInfo{
+    background-color: #1965B1;
+
+    display: grid;
+    grid-template-columns: 50%;
+    justify-content: center;
+}
+
+.weatherInfo .card{
+    background-color: #33587A;
+    font-family: 'DIN-Light',sans-serif;
+    color: white;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 100px;
+    grid-auto-rows: auto;
+    justify-items: center;
+    align-items: center;
+}
+
+.weatherInfo .card .currentWeather{
+    width: 75%;
+    height: 100%;
+    font-size: 36pt;
+
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: fit-content(1px);
+}
+
+.weatherInfo .card .currentWeather .temperature{
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.weatherInfo .card .currentWeather .temperature .feelsLikeTemperature{
+    font-size: 16pt;
+    display: flex;
+    align-items: center;
+}
+
+.weatherInfo .card .currentWeather .conditions{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 20px;
+}
+
+.weatherInfo .card .currentWeather .advancedInfo{
+    font-size: 16pt;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 25px;
+    justify-content: center;
+    align-content: center;
+    text-align: center;
 }

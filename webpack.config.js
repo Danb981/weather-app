@@ -6,6 +6,8 @@ module.exports = {
   entry: {
     index: './src/index.js',
     apicontroller: './src/apicontroller.js',
+    domcontroller: './src/domcontroller.js',
+    user: './src/user.js',
   },
   output: {
     filename: '[name].bundle.js',
