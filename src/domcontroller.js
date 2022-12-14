@@ -54,27 +54,42 @@ class DOMController {
     humidity.innerHTML = `Humidity<br />${currentWeatherJson.main.humidity}%`;
     pressure.innerHTML = `Pressure<br />${currentWeatherJson.main.pressure / 10} kPa`;
 
+    let sunrisePeriod;
     let localSunriseTime = new Date((currentWeatherJson.sys.sunrise + currentWeatherJson.timezone) * 1000);
-    const localSunriseHours = localSunriseTime.getUTCHours();
+    let localSunriseHours = localSunriseTime.getUTCHours();
+    if (localSunriseHours > 12) {
+      localSunriseHours -= 12;
+      sunrisePeriod = 'p.m';
+    } else {
+      sunrisePeriod = 'a.m';
+    }
     let localSunriseMinutes = localSunriseTime.getUTCMinutes();
     if (localSunriseMinutes.toString().length === 1) {
       localSunriseMinutes = `${0}${localSunriseMinutes}`;
     }
-    localSunriseTime = `${localSunriseHours}:${localSunriseMinutes}a.m`;
+    localSunriseTime = `${localSunriseHours}:${localSunriseMinutes}${sunrisePeriod}`;
 
+    let sunsetPeriod;
     let localSunsetTime = new Date((currentWeatherJson.sys.sunset + currentWeatherJson.timezone) * 1000);
-    const localSunsetHours = localSunsetTime.getUTCHours();
+    let localSunsetHours = localSunsetTime.getUTCHours();
+    if (localSunsetHours > 12) {
+      localSunsetHours -= 12;
+      sunsetPeriod = 'p.m';
+    } else {
+      sunsetPeriod = 'a.m';
+    }
     let localSunsetMinutes = localSunsetTime.getUTCMinutes();
     if (localSunsetMinutes.toString().length === 1) {
       localSunsetMinutes = `${0}${localSunsetMinutes}`;
     }
-    localSunsetTime = `${localSunsetHours}:${localSunsetMinutes}p.m`;
+    localSunsetTime = `${localSunsetHours}:${localSunsetMinutes}${sunsetPeriod}`;
 
     sunrise.innerHTML = `Sunrise<br />${localSunriseTime}`;
     sunset.innerHTML = `Sunset<br />${localSunsetTime}`;
   }
 
   static updateForecast(forecastJson) {
+    this.forecastIndex = 0;
     this.lastForecastJson = forecastJson;
     this.populateForecast();
   }
@@ -92,37 +107,46 @@ class DOMController {
         cells[x].classList.add('cell');
         card.appendChild(cells[x]);
       }
-      const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const date = new Date((forecastJson.list[this.forecastIndex + iteration].dt + forecastJson.city.timezone) * 1000);
-      const day = weekdays[date.getUTCDay()];
-      let hour = date.getUTCHours();
-      let period;
-      if (hour > 12) {
-        period = 'pm';
-        hour -= 12;
+      if (this.forecastIndex + iteration < 40) {
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const date = new Date((forecastJson.list[this.forecastIndex + iteration].dt + forecastJson.city.timezone) * 1000);
+        const day = weekdays[date.getUTCDay()];
+        let hour = date.getUTCHours();
+        let period;
+        if (hour > 12) {
+          period = 'pm';
+          hour -= 12;
+        } else {
+          period = 'am';
+        }
+
+        cells[0].innerHTML = `<h4>${day}<br />${hour}${period}`;
+
+        const icon = document.createElement('img');
+        icon.src = `http://openweathermap.org/img/wn/${forecastJson.list[this.forecastIndex + iteration].weather[0].icon}@2x.png`;
+        cells[1].appendChild(icon);
+
+        cells[2].innerHTML = `<h4>${Math.round(forecastJson.list[this.forecastIndex + iteration].main.temp)}\u00B0${this.user.preferredUnitAbbreviation}</h4>`;
+
+        cells[3].innerHTML = `<h4>${Math.round(forecastJson.list[this.forecastIndex + iteration].pop * 100)}%</h4>`;
+
+        let precip = '-';
+        if (forecastJson.list[this.forecastIndex + iteration].snow) {
+          precip = `${forecastJson.list[this.forecastIndex + iteration].snow['3h']}cm`;
+        } else if (forecastJson.list[this.forecastIndex + iteration].rain) {
+          precip = `${forecastJson.list[this.forecastIndex + iteration].rain['3h']}mm`;
+        }
+        cells[4].innerHTML = `<h4>${precip}</h4>`;
+
+        cells[5].innerHTML = `<h4>${forecastJson.list[this.forecastIndex + iteration].wind.speed} ${this.user.preferredWindUnit}</h4>`;
       } else {
-        period = 'am';
+        cells[0].innerHTML = '<h4></h4>';
+        cells[1].innerHTML = '<h4>-</h4>';
+        cells[2].innerHTML = '<h4>-</h4>';
+        cells[3].innerHTML = '<h4>-</h4>';
+        cells[4].innerHTML = '<h4>-</h4>';
+        cells[5].innerHTML = '<h4>-</h4>';
       }
-
-      cells[0].innerHTML = `<h4>${day}<br />${hour}${period}`;
-
-      const icon = document.createElement('img');
-      icon.src = `http://openweathermap.org/img/wn/${forecastJson.list[this.forecastIndex + iteration].weather[0].icon}@2x.png`;
-      cells[1].appendChild(icon);
-
-      cells[2].innerHTML = `<h4>${Math.round(forecastJson.list[this.forecastIndex + iteration].main.temp)}\u00B0${this.user.preferredUnitAbbreviation}</h4>`;
-
-      cells[3].innerHTML = `<h4>${forecastJson.list[this.forecastIndex + iteration].pop * 100}%</h4>`;
-
-      let precip = '-';
-      if (forecastJson.list[this.forecastIndex + iteration].snow) {
-        precip = `${forecastJson.list[this.forecastIndex + iteration].snow['3h']}cm`;
-      } else if (forecastJson.list[this.forecastIndex + iteration].rain) {
-        precip = `${forecastJson.list[this.forecastIndex + iteration].rain['3h']}mm`;
-      }
-      cells[4].innerHTML = `<h4>${precip}</h4>`;
-
-      cells[5].innerHTML = `<h4>${forecastJson.list[this.forecastIndex + iteration].wind.speed} ${this.user.preferredWindUnit}</h4>`;
     });
   }
 
@@ -139,13 +163,17 @@ class DOMController {
   }
 
   static prevBtnClicked() {
-    if (DOMController.forecastIndex != 0) {
-      DOMController.forecastIndex -= 8;
+    if (DOMController.forecastIndex !== 0) {
+      DOMController.forecastIndex -= 7;
+      DOMController.populateForecast();
     }
   }
 
   static nextBtnClicked() {
-
+    if (DOMController.forecastIndex < 35) {
+      DOMController.forecastIndex += 7;
+      DOMController.populateForecast();
+    }
   }
 }
 
