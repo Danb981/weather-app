@@ -1,14 +1,19 @@
+/* eslint-disable max-len */
 /* eslint-disable no-console */
 /* eslint-disable import/no-cycle */
 import { APIController } from './apicontroller';
 
 class DOMController {
+  static forecastIndex = 0;
+
   static init(user) {
     this.user = user;
     document.querySelector('.searchBtn').addEventListener('click', this.searchBtnClicked);
     document.querySelectorAll("[name='unit']").forEach((radio) => {
       radio.addEventListener('change', this.radioBtnChanged);
     });
+    document.querySelector('.prev').addEventListener('click', this.prevBtnClicked);
+    document.querySelector('.next').addEventListener('click', this.nextBtnClicked);
   }
 
   static populateCurrentWeather(currentWeatherJson) {
@@ -49,27 +54,98 @@ class DOMController {
     humidity.innerHTML = `Humidity<br />${currentWeatherJson.main.humidity}%`;
     pressure.innerHTML = `Pressure<br />${currentWeatherJson.main.pressure / 10} kPa`;
 
-    const sunriseTime = new Date(currentWeatherJson.sys.sunrise * 1000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric', hour12: true });
-    const sunsetTime = new Date(currentWeatherJson.sys.sunset * 1000).toLocaleTimeString([], { hour: 'numeric', minute: 'numeric', hour12: true });
-    sunrise.innerHTML = `Sunrise<br />${sunriseTime}`;
-    sunset.innerHTML = `Sunset<br />${sunsetTime}`;
+    let localSunriseTime = new Date((currentWeatherJson.sys.sunrise + currentWeatherJson.timezone) * 1000);
+    const localSunriseHours = localSunriseTime.getUTCHours();
+    let localSunriseMinutes = localSunriseTime.getUTCMinutes();
+    if (localSunriseMinutes.toString().length === 1) {
+      localSunriseMinutes = `${0}${localSunriseMinutes}`;
+    }
+    localSunriseTime = `${localSunriseHours}:${localSunriseMinutes}a.m`;
+
+    let localSunsetTime = new Date((currentWeatherJson.sys.sunset + currentWeatherJson.timezone) * 1000);
+    const localSunsetHours = localSunsetTime.getUTCHours();
+    let localSunsetMinutes = localSunsetTime.getUTCMinutes();
+    if (localSunsetMinutes.toString().length === 1) {
+      localSunsetMinutes = `${0}${localSunsetMinutes}`;
+    }
+    localSunsetTime = `${localSunsetHours}:${localSunsetMinutes}p.m`;
+
+    sunrise.innerHTML = `Sunrise<br />${localSunriseTime}`;
+    sunset.innerHTML = `Sunset<br />${localSunsetTime}`;
   }
 
-  static populateForecast(forecastJson) {
-    forecastJson.list.forEach((li) => {
-      li.dt = new Date(li.dt * 1000);
-    });
+  static updateForecast(forecastJson) {
+    this.lastForecastJson = forecastJson;
+    this.populateForecast();
+  }
+
+  static populateForecast() {
+    const forecastJson = DOMController.lastForecastJson;
     console.log(forecastJson);
+
+    const threeHourInfoCards = document.querySelectorAll('.threeHourInfo');
+    document.querySelectorAll('.cell').forEach((cell) => cell.remove());
+    threeHourInfoCards.forEach((card, iteration) => {
+      const cells = [];
+      for (let x = 0; x < 6; x++) {
+        cells[x] = document.createElement('span');
+        cells[x].classList.add('cell');
+        card.appendChild(cells[x]);
+      }
+      const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const date = new Date((forecastJson.list[this.forecastIndex + iteration].dt + forecastJson.city.timezone) * 1000);
+      const day = weekdays[date.getUTCDay()];
+      let hour = date.getUTCHours();
+      let period;
+      if (hour > 12) {
+        period = 'pm';
+        hour -= 12;
+      } else {
+        period = 'am';
+      }
+
+      cells[0].innerHTML = `<h4>${day}<br />${hour}${period}`;
+
+      const icon = document.createElement('img');
+      icon.src = `http://openweathermap.org/img/wn/${forecastJson.list[this.forecastIndex + iteration].weather[0].icon}@2x.png`;
+      cells[1].appendChild(icon);
+
+      cells[2].innerHTML = `<h4>${Math.round(forecastJson.list[this.forecastIndex + iteration].main.temp)}\u00B0${this.user.preferredUnitAbbreviation}</h4>`;
+
+      cells[3].innerHTML = `<h4>${forecastJson.list[this.forecastIndex + iteration].pop * 100}%</h4>`;
+
+      let precip = '-';
+      if (forecastJson.list[this.forecastIndex + iteration].snow) {
+        precip = `${forecastJson.list[this.forecastIndex + iteration].snow['3h']}cm`;
+      } else if (forecastJson.list[this.forecastIndex + iteration].rain) {
+        precip = `${forecastJson.list[this.forecastIndex + iteration].rain['3h']}mm`;
+      }
+      cells[4].innerHTML = `<h4>${precip}</h4>`;
+
+      cells[5].innerHTML = `<h4>${forecastJson.list[this.forecastIndex + iteration].wind.speed} ${this.user.preferredWindUnit}</h4>`;
+    });
   }
 
   static searchBtnClicked() {
     const searchTerm = document.querySelector('.searchTerm').value;
     APIController.getCityWeather(searchTerm);
+    APIController.getCityForecast(searchTerm);
   }
 
   static radioBtnChanged(e) {
     DOMController.user.changePreferredUnit(e.target.value);
     APIController.getCityWeather(document.querySelector('.cityName').innerText.split(' ')[0]);
+    APIController.getCityForecast(document.querySelector('.cityName').innerText.split(' ')[0]);
+  }
+
+  static prevBtnClicked() {
+    if (DOMController.forecastIndex != 0) {
+      DOMController.forecastIndex -= 8;
+    }
+  }
+
+  static nextBtnClicked() {
+
   }
 }
 

@@ -13,8 +13,8 @@ class APIController {
 
   static init(user) {
     this.user = user;
-    this.getCityWeather(user.defaultCity); // get the default city weather on page load
-    this.getCityForecast(user.defaultCity);
+    this.getCityWeather(this.user.defaultCity);
+    this.getCityForecast(this.user.defaultCity);
   }
 
   static getCityWeather = async (cityName) => {
@@ -48,7 +48,7 @@ class APIController {
         throw new Error('Issue getting info from API');
       }
       const json = await result.json();
-      DOMController.populateForecast(json);
+      DOMController.updateForecast(json);
     } catch (e) {
       this.forecastTries += 1;
       if (this.forecastTries < this.maxTries) {
