@@ -89,7 +89,6 @@ class DOMController {
   }
 
   static updateForecast(forecastJson) {
-    this.forecastIndex = 0;
     this.lastForecastJson = forecastJson;
     this.populateForecast();
   }
@@ -151,6 +150,7 @@ class DOMController {
   }
 
   static searchBtnClicked() {
+    this.forecastIndex = 0;
     const searchTerm = document.querySelector('.searchTerm').value;
     APIController.getCityWeather(searchTerm);
     APIController.getCityForecast(searchTerm);
